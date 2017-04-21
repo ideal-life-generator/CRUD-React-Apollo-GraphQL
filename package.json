@@ -1,0 +1,82 @@
+{
+  "name": "Legiscape",
+  "version": "1.0.0",
+  "description": "Legiscape",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/loomweaver/legiscape_visualization.git"
+  },
+  "scripts": {
+    "lint": "eslint ./",
+    "clear": "babel-node webpack/clear",
+    "start": "better-npm-run start",
+    "build": "better-npm-run build"
+  },
+  "betterScripts": {
+    "start": {
+      "command": "parallelshell \"webpack-dev-server --config webpack/client\" \"webpack --watch --config webpack/server\"",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "build": {
+      "command": "webpack",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^3.2.0",
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.2",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "better-npm-run": "0.0.15",
+    "copy-webpack-plugin": "^4.0.1",
+    "css-loader": "^0.28.0",
+    "del": "^2.2.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "file-loader": "^0.11.1",
+    "node-sass": "^4.5.2",
+    "parallelshell": "^2.0.0",
+    "redux-devtools-instrument": "^1.8.0",
+    "reload-server-webpack-plugin": "^1.0.1",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.4.1",
+    "webpack-dev-server": "^2.4.2",
+    "webpack-merge": "^4.1.0",
+    "webpack-node-externals": "^1.5.4"
+  },
+  "dependencies": {
+    "axios": "^0.16.1",
+    "chalk": "^1.1.3",
+    "classnames": "^2.2.5",
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "express-graphql": "^0.6.4",
+    "graphql": "^0.9.3",
+    "neo4j-driver": "^1.2.0",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-apollo": "^1.0.1",
+    "react-dom": "^15.5.4",
+    "react-hot-loader": "next",
+    "react-redux": "^5.0.4",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.6.0",
+    "redux-form": "^6.6.3",
+    "redux-thunk": "^2.2.0"
+  }
+}

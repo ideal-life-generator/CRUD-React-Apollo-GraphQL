@@ -1,0 +1,22 @@
+@import './reset.scss';
+@import './theme.scss';
+
+:global {
+  html {
+    height: 100%;
+  }
+
+  body {
+    min-height: 100%;
+    display: flex;
+    margin: 0px;
+    font-family: $font, sans-serif;
+    font-size: $fontSize;
+    font-weight: $fontWeight;
+    color: $grayscaleColor3;
+  }
+
+  #app {
+    flex-grow: 1;
+  }
+}
