@@ -4,7 +4,7 @@ import neo4j from '../neo4j';
 
 export default {
   type: new GraphQLNonNull(UserType),
-  async resolve() {
+  async resolve(parentValue, _, { session: { isAuthorized } }) {
     try {
       const session = neo4j.session();
 
@@ -17,7 +17,7 @@ export default {
       session.close();
 
       return {
-        isAuthorized: true,
+        isAuthorized,
         username: me.get('username'),
       };
     } catch (error) {
