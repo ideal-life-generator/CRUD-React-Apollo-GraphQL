@@ -1,7 +1,7 @@
 import express from 'express';
-import expressSession from 'express-session';
-import sessionFileStore from 'session-file-store';
 import cors from 'cors';
+import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 import graphqlHTTP from 'express-graphql';
 import chalk from 'chalk';
 import schema from './data/schema';
@@ -9,20 +9,23 @@ import { graphQLPort } from './config';
 
 const app = express();
 
-const FileStore = sessionFileStore(expressSession);
+app.use(cookieParser());
 
-app.use(expressSession({
-  resave: false,
-  saveUninitialized: true,
-  secret: 'mix of the drink',
-  cookie: { secure: true },
-  store: new FileStore(),
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
 }));
 
-app.use(cors());
+app.use(cookieSession({
+  keys: ['mix of the drink', 'another mix of the drink :DD'],
+}));
 
 app.use((req, res, next) => {
-  req.session.x = 1;
+  req.session.isAuthorized = true;
+
+  console.log(req.cookies);
+
+  console.log(req.session);
 
   next();
 });

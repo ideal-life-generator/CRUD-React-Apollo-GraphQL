@@ -12,6 +12,9 @@ const $app = document.getElementById('app');
 
 const networkInterface = createNetworkInterface({
   uri: 'http://localhost:5000/graphql',
+  opts: {
+    credentials: 'include',
+  },
 });
 
 const client = new ApolloClient({ networkInterface });
