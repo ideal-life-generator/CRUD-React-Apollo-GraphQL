@@ -1,4 +1,5 @@
 import { GraphQLNonNull } from 'graphql';
+import chalk from 'chalk';
 import UserType from '../types/User';
 import neo4j from '../neo4j';
 
@@ -17,11 +18,13 @@ export default {
       session.close();
 
       return {
-        isAuthorized,
+        isAuthorized: isAuthorized || false,
         username: me.get('username'),
       };
     } catch (error) {
-      throw error;
+      console.error(chalk.red(error));
+
+      throw new Error('Something was wrong ...');
     }
   },
 };

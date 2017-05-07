@@ -1,31 +1,50 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { func, element } from 'prop-types';
 import { render } from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { ApolloClient, ApolloProvider, createNetworkInterface } from 'react-apollo';
+import { BrowserRouter } from 'react-router-dom';
+import { ApolloProvider } from 'react-apollo';
+// import { persistStore } from 'redux-persist';
 import { AppContainer } from 'react-hot-loader';
 import App from './containers/App';
-import './styles/index.scss';
+import client from './client';
+import store from './store';
 
 const { env: { NODE_ENV } } = process;
 
 const $app = document.getElementById('app');
 
-const networkInterface = createNetworkInterface({
-  uri: 'http://localhost:5000/graphql',
-  opts: {
-    credentials: 'include',
-  },
-});
+// persistStore(store, { blacklist: ['apollo'] });
 
-const client = new ApolloClient({ networkInterface });
+class Context extends Component {
+  static propTypes = {
+    children: element.isRequired,
+  };
+
+  static childContextTypes = {
+    insertCss: func.isRequired,
+  };
+
+  getChildContext = () => ({
+    insertCss: (...insertedStyles) => {
+      // eslint-disable-next-line no-underscore-dangle
+      const removeCss = insertedStyles.map(x => x._insertCss());
+
+      return () => { removeCss.forEach(f => f()); };
+    },
+  });
+
+  render = () => this.props.children;
+}
 
 function renderApp(NextApp) {
   render(
     <AppContainer>
-      <ApolloProvider client={client}>
-        <Router>
-          <NextApp />
-        </Router>
+      <ApolloProvider client={client} store={store}>
+        <BrowserRouter>
+          <Context>
+            <NextApp />
+          </Context>
+        </BrowserRouter>
       </ApolloProvider>
     </AppContainer>,
     $app,

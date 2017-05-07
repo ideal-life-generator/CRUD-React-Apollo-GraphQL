@@ -1,12 +1,7 @@
 {
-  "name": "Legiscape",
+  "name": "MusicApp",
   "version": "1.0.0",
-  "description": "Legiscape",
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "https://bitbucket.org/loomweaver/legiscape_visualization.git"
-  },
+  "description": "MusicApp",
   "scripts": {
     "lint": "eslint ./",
     "clear": "babel-node webpack/clear",
@@ -15,7 +10,7 @@
   },
   "betterScripts": {
     "start": {
-      "command": "parallelshell \"webpack-dev-server --config webpack/client\" \"webpack --watch --config webpack/server\"",
+      "command": "parallelshell \"webpack --watch --config webpack/graphql\" \"webpack --watch --config webpack/server\" \"webpack-dev-server --config webpack/client\"",
       "env": {
         "NODE_ENV": "development"
       }
@@ -48,8 +43,10 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "file-loader": "^0.11.1",
+    "isomorphic-style-loader": "^2.0.0",
     "node-sass": "^4.5.2",
     "parallelshell": "^2.0.0",
+    "postcss-loader": "^1.3.3",
     "redux-devtools-instrument": "^1.8.0",
     "reload-server-webpack-plugin": "^1.0.1",
     "sass-loader": "^6.0.3",
@@ -78,7 +75,7 @@
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
     "redux": "^3.6.0",
-    "redux-form": "^6.6.3",
-    "redux-thunk": "^2.2.0"
+    "redux-persist": "^4.8.0",
+    "ytdl-core": "^0.13.1"
   }
 }

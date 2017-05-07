@@ -1,39 +1,52 @@
-import express from 'express';
-import cors from 'cors';
-import cookieSession from 'cookie-session';
-import cookieParser from 'cookie-parser';
-import graphqlHTTP from 'express-graphql';
+import Express from 'express';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import { StaticRouter } from 'react-router';
+import { ApolloProvider } from 'react-apollo';
 import chalk from 'chalk';
-import schema from './data/schema';
-import { graphQLPort } from './config';
+// import { ApolloClient, createNetworkInterface, ApolloProvider } from 'react-apollo';
+import App from './containers/App';
+import client from './client';
+import store from './store';
+import { serverPort } from './config';
+// import routes from './routes';
 
-const app = express();
+const app = new Express();
 
-app.use(cookieParser());
+app.use((req, res) => {
+  const css = new Set();
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true,
-}));
+  const context = { insertCss: (...styles) => console.log(styles) || styles.forEach(style => css.add(style._getCss())) };
 
-app.use(cookieSession({
-  keys: ['mix of the drink', 'another mix of the drink :DD'],
-}));
+  const html = ReactDOMServer.renderToString(
+    <StaticRouter
+      location={req.url}
+      context={context}
+    >
+      <ApolloProvider client={client} store={store}>
+        <App />
+      </ApolloProvider>
+    </StaticRouter>,
+  );
 
-app.use((req, res, next) => {
-  req.session.isAuthorized = true;
+  if (context.url) {
+    res.writeHead(301, {
+      Location: context.url,
+    });
 
-  console.log(req.cookies);
+    res.end();
+  } else {
+    res.write(`
+      <!doctype html>
+      <div id="app">${html}</div>
+      <style type="text/css">${[...css].join('')}</style>
 
-  console.log(req.session);
+      <script src="http://localhost:3000/packages.js"></script>
+      <script src="http://localhost:3000/client.js"></script>
+    `);
 
-  next();
+    res.end();
+  }
 });
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  pretty: true,
-  graphiql: true,
-}));
-
-app.listen(graphQLPort, () => console.info(chalk.green(`GraphQL server is listening on localhost:${graphQLPort}`)));
+app.listen(serverPort, () => console.info(chalk.green(`GraphQL server is listening on localhost:${serverPort}`)));

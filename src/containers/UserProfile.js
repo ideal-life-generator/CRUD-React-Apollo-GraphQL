@@ -28,6 +28,10 @@ export default class UserProfile extends Component {
       return <div>Loading</div>;
     }
 
+    if (data.error) {
+      return <div>{data.error.message}</div>;
+    }
+
     if (data.user.isAuthorized) {
       return (
         <div>

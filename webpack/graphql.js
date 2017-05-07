@@ -16,11 +16,11 @@ const { stringify } = JSON;
 
 const { env: { NODE_ENV } } = process;
 
-const server = {
+const graphql = {
   target: 'node',
   context: resolve('src'),
   entry: {
-    server: './server',
+    graphql: './graphql',
   },
   output: {
     path: resolve('build'),
@@ -33,33 +33,6 @@ const server = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          'isomorphic-style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: true,
-              modules: true,
-              localIdentName: '[name]_[local]_[hash:base64:5]',
-            },
-          },
-          // {
-          //   loader: 'autoprefixer-loader',
-          //   options: {
-          //     browsers: 'last 2 version',
-          //   },
-          // },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
-        ],
         exclude: /node_modules/,
       },
     ],
@@ -80,10 +53,10 @@ const server = {
 if (NODE_ENV === 'development') {
   module.exports = smartStrategy({
     'entry.packages': 'prepend',
-  })(server, {
+  })(graphql, {
     plugins: [
       new ReloadServerPlugin({
-        script: 'build/server.js',
+        script: 'build/graphql.js',
       }),
       new LoaderOptionsPlugin({
         options: {
@@ -103,7 +76,7 @@ if (NODE_ENV === 'development') {
 }
 
 if (NODE_ENV === 'production') {
-  module.exports = smart(server, {
+  module.exports = smart(graphql, {
     plugins: [
       new OccurenceOrderPlugin(),
       new UglifyJsPlugin({
