@@ -3,11 +3,11 @@ import { bool, string, number, shape } from 'prop-types';
 import { connect } from 'react-redux';
 import { gql, graphql } from 'react-apollo';
 
-@connect(({ video: { url } }) => ({ url }))
+@connect(({ search: { videoId } }) => ({ videoId }))
 
 @graphql(gql`
-  query ($url: String!) {
-    videoInfo(url: $url) {
+  query ($videoId: String!) {
+    videoInfo(videoId: $videoId) {
       title,
       lengthSeconds,
       imageUrl,
@@ -45,13 +45,14 @@ export default class InputInfo extends Component {
 
     return (
       <div>
-        <h5>{videoInfo.title}</h5>
+        <br />
+        {/*<h5>{videoInfo.title}</h5>*/}
         <img src={videoInfo.imageUrl} alt={videoInfo.title} />
-        <p>
+        {/*<p>
           <span>{(videoInfo.lengthSeconds / 60).toFixed(0)}m {videoInfo.lengthSeconds % 60}s</span>
           &nbsp;
           <span>{videoInfo.views} views</span>
-        </p>
+        </p>*/}
       </div>
     );
   }

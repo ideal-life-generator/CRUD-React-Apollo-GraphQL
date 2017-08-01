@@ -8,6 +8,7 @@ import { AppContainer } from 'react-hot-loader';
 import App from './containers/App';
 import client from './client';
 import store from './store';
+import './styles/index.scss';
 
 const { env: { NODE_ENV } } = process;
 

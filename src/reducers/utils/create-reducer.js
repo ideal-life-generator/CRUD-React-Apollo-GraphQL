@@ -4,7 +4,7 @@ export default (initialState, handlers) => (state = initialState, { type, payloa
   if (handler) {
     return {
       ...state,
-      ...handler(state, ...payload),
+      ...handler(...payload, state),
     };
   }
 

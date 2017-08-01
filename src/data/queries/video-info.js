@@ -6,13 +6,13 @@ import VideoInfoType from '../types/VideoInfo';
 export default {
   type: new GraphQLNonNull(VideoInfoType),
   args: {
-    url: {
+    videoId: {
       type: GraphQLString,
     },
   },
   async resolve(root, args) {
     try {
-      const response = await ytdl.getInfo(args.url);
+      const response = await ytdl.getInfo(args.videoId);
 
       const {
         title,

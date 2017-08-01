@@ -1,0 +1,22 @@
+@import '../styles/_theme.scss';
+
+$height: 20px;
+
+.search {
+	width: 220px;
+	height: $height;
+	display: flex;
+	align-items: stretch;
+  border: 1px solid black;
+  border-radius: 2px;
+  .input {
+  	flex-grow: 1;
+  }
+  .clearContainer {
+  	width: $height;
+  	display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	cursor: pointer;
+  }
+}

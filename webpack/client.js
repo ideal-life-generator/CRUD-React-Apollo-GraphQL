@@ -42,7 +42,7 @@ const client = {
       {
         test: /\.scss$/,
         use: [
-          'isomorphic-style-loader',
+          'style-loader',
           {
             loader: 'css-loader',
             options: {

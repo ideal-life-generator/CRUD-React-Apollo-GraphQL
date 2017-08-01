@@ -1,7 +1,14 @@
 @import '../styles/_theme.scss';
 
-.main {
+.app {
   min-height: 100%;
-  background-color: $color4;
-  color: $color5;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  .main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

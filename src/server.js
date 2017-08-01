@@ -49,4 +49,4 @@ app.use((req, res) => {
   }
 });
 
-app.listen(serverPort, () => console.info(chalk.green(`GraphQL server is listening on localhost:${serverPort}`)));
+app.listen(serverPort, () => console.info(chalk.green(`React app is listening on localhost:${serverPort}`)));

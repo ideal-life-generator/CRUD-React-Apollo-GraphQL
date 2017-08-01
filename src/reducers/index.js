@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import client from '../client';
-import video from './video';
+import search from './search';
 
 export default combineReducers({
   apollo: client.reducer(),
-  video,
+  search,
 });
