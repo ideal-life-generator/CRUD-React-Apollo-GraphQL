@@ -13,6 +13,7 @@
     "import/no-dynamic-require": [1],
     "import/no-extraneous-dependencies": [1],
     "import/prefer-default-export": [1],
+    "arrow-body-style": [1],
     "no-bitwise": [1],
     "consistent-return": [1],
     "class-methods-use-this": [1],

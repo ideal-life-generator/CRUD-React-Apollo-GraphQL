@@ -1,0 +1,8 @@
+@import '../styles/_theme.scss';
+
+.table {
+  border-collapse: collapse;
+  th, td {
+    border: 1px solid black;
+  }
+}

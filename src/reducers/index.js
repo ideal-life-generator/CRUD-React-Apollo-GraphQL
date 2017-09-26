@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import client from '../client';
-import search from './search';
+import table from './table';
 
 export default combineReducers({
   apollo: client.reducer(),
-  search,
+  table,
 });
