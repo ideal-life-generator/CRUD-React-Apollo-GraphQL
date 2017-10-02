@@ -3,10 +3,14 @@ import { string, func, shape, arrayOf } from 'prop-types';
 import { compose, graphql } from 'react-apollo';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as queries from '../queries/table';
-import Row from '../components/Row';
-import * as actions from '../reducers/table';
-import styles from './Table.scss';
+import injectSheet from 'react-jss';
+import * as queries from '../../queries/table';
+import Header from './Header';
+import Row from './Row';
+import * as actions from '../../reducers/table';
+import styles from './index.jss';
+
+@injectSheet(styles)
 
 @connect(({
   table: {
@@ -17,6 +21,7 @@ import styles from './Table.scss';
   order,
   create,
 }), dispatch => bindActionCreators({
+  changeOrder: actions.changeOrder,
   setName: actions.setName,
 }, dispatch))
 
@@ -27,6 +32,11 @@ import styles from './Table.scss';
         orderProperty: property,
         orderDirection: direction,
       },
+    }),
+    props: props => ({
+      ...props,
+      rawData: props.data,
+      data: props.data,
     }),
   }),
   graphql(queries.createRow, {
@@ -103,6 +113,9 @@ import styles from './Table.scss';
 
 export default class Table extends Component {
   static propTypes = {
+    classes: shape({
+      table: string.isRequired,
+    }).isRequired,
     create: shape({
       name: string.isRequired,
     }).isRequired,
@@ -112,6 +125,7 @@ export default class Table extends Component {
         name: string.isRequired,
       })),
     }).isRequired,
+    changeOrder: func.isRequired,
     setName: func.isRequired,
     createRow: func.isRequired,
     deleteRow: func.isRequired,
@@ -140,21 +154,41 @@ export default class Table extends Component {
     setName('');
   };
 
-  renderLoading = () => {
-    return (
-      <tr>
-        <td
-          colSpan="3"
-        >
-          loading
-        </td>
-      </tr>
-    );
-  };
+  renderRows = () => {
+    const {
+      props: {
+        data,
+      },
+    } = this;
 
-  renderContent = () => {
+    if (data.loading) {
+      return (
+        <tr>
+          <td
+            colSpan="3"
+          >
+            loading
+          </td>
+        </tr>
+      );
+    }
+
+    if (data.error) {
+      return (
+        <tr>
+          <td
+            colSpan="3"
+          >
+            {data.error.message}
+          </td>
+        </tr>
+      );
+    }
+
+    console.log(Object.keys(data.table[0]));
+
     return (
-      this.props.data.table.map(row => (
+      data.table.map(row => (
         <Row
           key={row.id}
           {...row}
@@ -164,70 +198,42 @@ export default class Table extends Component {
     );
   };
 
-  renderError = () => {
-    return (
-      <tr>
-        <td
-          colSpan="3"
-        >
-          {this.props.data.error.message}
-        </td>
-      </tr>
-    );
-  };
-
-  renderRows = () => {
-    const {
-      props: {
-        data,
-      },
-    } = this;
-
-    if (data.loading) {
-      return this.renderLoading();
-    }
-
-    if (data.error) {
-      return this.renderError();
-    }
-
-    return this.renderContent();
-  };
-
   render() {
     const {
-      renderRows,
-      onEnterName,
-      onCreate,
-      props: {
-        create,
-      },
+      props,
     } = this;
 
+    // console.log(props.data);
+
     return (
-      <table className={styles.table}>
+      <table className={props.classes.table}>
         <thead>
           <tr>
-            <th>id</th>
-            <th>name</th>
+            {['id', 'name'].map(property => (
+              <Header
+                key={property}
+                property={property}
+                changeOrder={props.changeOrder}
+              />
+            ))}
             <th />
           </tr>
         </thead>
         <tbody>
-          {renderRows()}
+          {this.renderRows()}
           <tr>
             <td />
             <td>
               <input
                 type="text"
                 placeholder="Enter name"
-                value={create.name}
-                onChange={onEnterName}
+                value={props.create.name}
+                onChange={this.onEnterName}
               />
             </td>
             <td>
               <button
-                onClick={onCreate}
+                onClick={this.onCreate}
               >
                 create
               </button>
