@@ -1,11 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import asyncActionMiddleware from './middlewares/async-action';
 // import { autoRehydrate } from 'redux-persist';
-import client from './client';
-import reducers from './reducers';
+import reducers from '../reducers';
 
 export default createStore(reducers, undefined, compose(
-  applyMiddleware(client.middleware()),
-  applyMiddleware(thunk),
-  // autoRehydrate(),
+  applyMiddleware(
+    thunk,
+    asyncActionMiddleware,
+  ),
 ));

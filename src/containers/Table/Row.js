@@ -5,7 +5,7 @@ export default class Row extends Component {
   static propTypes = {
     id: string.isRequired,
     name: string.isRequired,
-    deleteRow: func.isRequired,
+    // deleteRow: func.isRequired,
   };
 
   onDelete = () => {

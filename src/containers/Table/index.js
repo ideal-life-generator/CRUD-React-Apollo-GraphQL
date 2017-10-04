@@ -1,135 +1,66 @@
 import React, { Component } from 'react';
-import { string, func, shape, arrayOf } from 'prop-types';
-import { compose, graphql } from 'react-apollo';
+import { bool, string, func, shape, arrayOf, oneOf } from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
-import * as queries from '../../queries/table';
 import Header from './Header';
 import Row from './Row';
-import * as actions from '../../reducers/table';
+import * as tableInterface from '../../reducers/table';
 import styles from './index.jss';
 
 @injectSheet(styles)
 
 @connect(({
   table: {
-    order,
+    data,
     create,
   },
 }) => ({
-  order,
+  data,
   create,
 }), dispatch => bindActionCreators({
-  changeOrder: actions.changeOrder,
-  setName: actions.setName,
+  get: tableInterface.get,
+  changeOrder: tableInterface.changeOrder,
+  setName: tableInterface.setName,
 }, dispatch))
-
-@compose(
-  graphql(queries.table, {
-    options: ({ order: { property, direction } }) => ({
-      variables: {
-        orderProperty: property,
-        orderDirection: direction,
-      },
-    }),
-    props: props => ({
-      ...props,
-      rawData: props.data,
-      data: props.data,
-    }),
-  }),
-  graphql(queries.createRow, {
-    props: ({
-      ownProps: {
-        order: { property, direction },
-        create: { name },
-      },
-      mutate,
-    }) => ({
-      createRow: () => mutate({
-        variables: {
-          name,
-        },
-        refetchQueries: [{
-          query: queries.table,
-          variables: {
-            orderProperty: property,
-            orderDirection: direction,
-          },
-        }],
-      }),
-    }),
-  }),
-  graphql(queries.deleteRow, {
-    props: ({
-      ownProps: {
-        order: { property, direction },
-      },
-      mutate,
-    }) => ({
-      deleteRow: id => mutate({
-        variables: {
-          id,
-        },
-        refetchQueries: [{
-          query: queries.table,
-          variables: {
-            orderProperty: property,
-            orderDirection: direction,
-          },
-        }],
-        optimisticResponse: {
-          __typename: 'Mutation',
-          deleteRow: {
-            __typename: 'Row',
-            id,
-          },
-        },
-        update: (store, { data: { deleteRow } }) => {
-          const data = store.readQuery({
-            query: queries.table,
-            variables: {
-              orderProperty: property,
-              orderDirection: direction,
-            },
-          });
-
-          data.table = data.table.filter(row => row.id !== deleteRow.id);
-
-          store.writeQuery({
-            query: queries.table,
-            variables: {
-              orderProperty: property,
-              orderDirection: direction,
-            },
-            data,
-          });
-        },
-      }),
-    }),
-  }),
-)
 
 export default class Table extends Component {
   static propTypes = {
-    classes: shape({
-      table: string.isRequired,
-    }).isRequired,
-    create: shape({
-      name: string.isRequired,
-    }).isRequired,
+    // classes: shape({
+    //   table: string.isRequired,
+    // }).isRequired,
+    // create: shape({
+    //   name: string.isRequired,
+    // }).isRequired,
     data: shape({
+      isFething: bool.isRequired,
       table: arrayOf(shape({
         id: string.isRequired,
         name: string.isRequired,
       })),
+      orderProperty: string.isRequired,
+      orderDirection: oneOf([tableInterface.normalOrderDirection, tableInterface.reverseOrderDirection]).isRequired,
+      error: string,
     }).isRequired,
-    changeOrder: func.isRequired,
+    get: func.isRequired,
+    // changeOrder: func.isRequired,
     setName: func.isRequired,
-    createRow: func.isRequired,
-    deleteRow: func.isRequired,
+    // createRow: func.isRequired,
+    // deleteRow: func.isRequired,
   };
+
+  async componentDidMount() {
+    const {
+      props: {
+        data: {
+          orderProperty,
+          orderDirection,
+        },
+      },
+    } = this;
+
+    await this.props.get({ orderProperty, orderDirection });
+  }
 
   onEnterName = ({ target: { value } }) => {
     const {
@@ -185,14 +116,12 @@ export default class Table extends Component {
       );
     }
 
-    console.log(Object.keys(data.table[0]));
-
     return (
       data.table.map(row => (
         <Row
           key={row.id}
           {...row}
-          deleteRow={this.props.deleteRow}
+          // deleteRow={this.props.deleteRow}
         />
       ))
     );

@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { func, element } from 'prop-types';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
+import { Provider } from 'react-redux';
 // import { persistStore } from 'redux-persist';
 import { AppContainer } from 'react-hot-loader';
 import App from './containers/App';
-import client from './client';
 import store from './store';
 import './styles/index.scss';
 
@@ -40,13 +39,13 @@ class Context extends Component {
 function renderApp(NextApp) {
   render(
     <AppContainer>
-      <ApolloProvider client={client} store={store}>
+      <Provider store={store}>
         <BrowserRouter>
           <Context>
             <NextApp />
           </Context>
         </BrowserRouter>
-      </ApolloProvider>
+      </Provider>
     </AppContainer>,
     $app,
   );

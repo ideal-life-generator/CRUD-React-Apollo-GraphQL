@@ -30,7 +30,7 @@ app.use(({ session }, res, next) => {
   next();
 });
 
-app.use('/graphql', graphqlHTTP({
+app.use(graphqlHTTP({
   schema,
   pretty: true,
   graphiql: true,

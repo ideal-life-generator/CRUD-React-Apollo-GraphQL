@@ -1,7 +1,10 @@
-export default (type) => {
-  const action = (...payload) => ({ type, payload });
+export default (CONSTANT) => {
+  const action = (...args) => ({
+    type: CONSTANT,
+    args,
+  });
 
-  action.type = type;
+  action.CONSTANT = CONSTANT;
 
   return action;
 };

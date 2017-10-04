@@ -16,6 +16,7 @@
     "arrow-body-style": [1],
     "no-bitwise": [1],
     "consistent-return": [1],
+    "no-return-await": [0],
     "class-methods-use-this": [1],
     "array-callback-return": [1],
     "no-param-reassign": [1],
